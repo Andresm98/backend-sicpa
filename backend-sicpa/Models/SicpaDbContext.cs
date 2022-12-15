@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace backend_sicpa.DbRepo
+namespace backend_sicpa.Models
 {
-    public partial class ScottDbContext : DbContext
+    public partial class SicpaDbContext : DbContext
     {
-        public ScottDbContext()
+        public SicpaDbContext()
         {
         }
 
-        public ScottDbContext(DbContextOptions<ScottDbContext> options)
+        public SicpaDbContext(DbContextOptions<SicpaDbContext> options)
             : base(options)
         {
         }
@@ -24,7 +24,7 @@ namespace backend_sicpa.DbRepo
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-            {  
+            {
             }
         }
 
@@ -41,7 +41,6 @@ namespace backend_sicpa.DbRepo
 
                 entity.Property(e => e.Id)
                     .HasColumnType("int(11)")
-                    .ValueGeneratedNever()
                     .HasColumnName("id");
 
                 entity.Property(e => e.CreatedBy)
@@ -79,21 +78,25 @@ namespace backend_sicpa.DbRepo
                 entity.HasOne(d => d.Enterprises)
                     .WithMany(p => p.Departments)
                     .HasForeignKey(d => d.EnterprisesId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_departments_enterprises");
             });
 
             modelBuilder.Entity<DepartmentsEmployee>(entity =>
             {
-                entity.HasKey(e => new { e.DepartmentsId, e.EmployeesId })
+                entity.HasKey(e => new { e.Id, e.DepartmentsId, e.EmployeesId })
                     .HasName("PRIMARY")
-                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
 
                 entity.ToTable("departments_employees");
 
                 entity.HasIndex(e => e.DepartmentsId, "fk_departments_has_employees_departments1_idx");
 
                 entity.HasIndex(e => e.EmployeesId, "fk_departments_has_employees_employees1_idx");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(11)")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("id");
 
                 entity.Property(e => e.DepartmentsId)
                     .HasColumnType("int(11)")
@@ -122,13 +125,11 @@ namespace backend_sicpa.DbRepo
                 entity.HasOne(d => d.Departments)
                     .WithMany(p => p.DepartmentsEmployees)
                     .HasForeignKey(d => d.DepartmentsId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_departments_has_employees_departments1");
 
                 entity.HasOne(d => d.Employees)
                     .WithMany(p => p.DepartmentsEmployees)
                     .HasForeignKey(d => d.EmployeesId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_departments_has_employees_employees1");
             });
 
@@ -138,7 +139,6 @@ namespace backend_sicpa.DbRepo
 
                 entity.Property(e => e.Id)
                     .HasColumnType("int(11)")
-                    .ValueGeneratedNever()
                     .HasColumnName("id");
 
                 entity.Property(e => e.Age)
@@ -180,7 +180,6 @@ namespace backend_sicpa.DbRepo
 
                 entity.Property(e => e.Id)
                     .HasColumnType("int(11)")
-                    .ValueGeneratedNever()
                     .HasColumnName("id");
 
                 entity.Property(e => e.Address)

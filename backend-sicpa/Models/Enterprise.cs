@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace backend_sicpa.DbRepo
+namespace backend_sicpa.Models
 {
-    public partial class Department
+    public partial class Enterprise
     {
-        public Department()
+        public Enterprise()
         {
-            DepartmentsEmployees = new HashSet<DepartmentsEmployee>();
+            Departments = new HashSet<Department>();
         }
 
         public int Id { get; set; }
@@ -22,12 +22,10 @@ namespace backend_sicpa.DbRepo
         [JsonConverter(typeof(DateOnlyJsonConverter))]
         public DateOnly ModifiedDate { get; set; }
         public sbyte Status { get; set; }
-        public string Description { get; set; } = null!;
+        public string Address { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string Phone { get; set; } = null!;
-        public int EnterprisesId { get; set; }
 
-        public virtual Enterprise Enterprises { get; set; } = null!;
-        public virtual ICollection<DepartmentsEmployee> DepartmentsEmployees { get; set; }
+        public virtual ICollection<Department> Departments { get; set; }
     }
 }

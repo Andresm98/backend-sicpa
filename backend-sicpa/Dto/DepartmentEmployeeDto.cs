@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace backend_sicpa.DbRepo
+namespace backend_sicpa.Dto
 {
-    public partial class DepartmentsEmployee
+    public class DepartmentEmployeeDto
     {
+        public int Id { get; set; }
         public int DepartmentsId { get; set; }
         public int EmployeesId { get; set; }
         public string CreatedBy { get; set; } = null!;
@@ -17,10 +16,7 @@ namespace backend_sicpa.DbRepo
 
         [JsonConverter(typeof(DateOnlyJsonConverter))]
         public DateOnly ModifiedDate { get; set; }
-
         public sbyte Status { get; set; }
 
-        public virtual Department Departments { get; set; } = null!;
-        public virtual Employee Employees { get; set; } = null!;
     }
 }
