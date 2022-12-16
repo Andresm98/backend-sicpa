@@ -77,14 +77,18 @@ namespace backend_sicpa.Controllers
         {
             if (departmentEmployeeCreate == null)
                 return BadRequest(ModelState);
- 
+
+           
             var departmentEmployee = _departmentEmployeeRepository.GetDepartmentsEmployees()
                 .Where(c => c.DepartmentsId == departmentId && c.EmployeesId == employeeId && c.Status == 1).FirstOrDefault();
 
             if (departmentEmployee != null)
             {
-                ModelState.AddModelError("", "Contract already exists");
-                return StatusCode(422, ModelState);
+                if (departmentEmployeeCreate.Status == 1)
+                {
+                    ModelState.AddModelError("", "Contract already exists");
+                    return StatusCode(422, ModelState);
+                }
             }
 
             if (!ModelState.IsValid)
